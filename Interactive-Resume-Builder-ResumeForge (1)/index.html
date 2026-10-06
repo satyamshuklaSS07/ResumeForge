@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive Resume Builder with live preview and print-ready resume export.">
+  <title>ResumeForge — Interactive Resume Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div>
+          <strong>ResumeForge</strong>
+          <span>Interactive Resume Builder</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="ghost-btn" id="clearBtn" type="button">Clear</button>
+        <button class="secondary-btn" id="sampleBtn" type="button">Load Sample</button>
+        <button class="primary-btn" id="printBtn" type="button">Print / Save PDF</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="editor-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">BUILD YOUR STORY</span>
+            <h1>Your Resume</h1>
+            <p>Fill the form and watch your resume update instantly.</p>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-ring"><span id="completion">0%</span></div>
+          </div>
+        </div>
+
+        <form id="resumeForm" autocomplete="off">
+          <section class="form-section">
+            <div class="section-title"><span>01</span><h2>Personal information</h2></div>
+            <div class="photo-upload">
+              <div class="avatar-preview" id="avatarPreview">+</div>
+              <div>
+                <label class="upload-btn">
+                  Upload photo
+                  <input type="file" id="photoInput" accept="image/*">
+                </label>
+                <small>JPG or PNG · square photo recommended</small>
+              </div>
+            </div>
+            <div class="grid two">
+              <label>Full name<input id="name" placeholder="e.g. Satyam Shukla"></label>
+              <label>Professional title<input id="title" placeholder="e.g. Software Developer"></label>
+            </div>
+            <div class="grid two">
+              <label>Email<input id="email" type="email" placeholder="you@example.com"></label>
+              <label>Phone<input id="phone" placeholder="+91 98765 43210"></label>
+            </div>
+            <div class="grid two">
+              <label>Location<input id="location" placeholder="Delhi, India"></label>
+              <label>Website / LinkedIn<input id="website" placeholder="linkedin.com/in/yourname"></label>
+            </div>
+            <label>Professional summary<textarea id="summary" rows="4" placeholder="Write 2–4 lines about your experience, strengths and career direction..."></textarea></label>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title"><span>02</span><h2>Education</h2><button class="add-btn" id="addEducation" type="button">+ Add</button></div>
+            <div id="educationFields" class="repeat-list"></div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title"><span>03</span><h2>Experience</h2><button class="add-btn" id="addExperience" type="button">+ Add</button></div>
+            <div id="experienceFields" class="repeat-list"></div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title"><span>04</span><h2>Skills & links</h2></div>
+            <label>Skills <span class="hint">comma separated</span><input id="skills" placeholder="JavaScript, Java, Python, Git, SQL"></label>
+            <div class="grid two">
+              <label>GitHub<input id="github" placeholder="github.com/username"></label>
+              <label>Portfolio<input id="portfolio" placeholder="yourportfolio.com"></label>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title"><span>05</span><h2>Projects</h2><button class="add-btn" id="addProject" type="button">+ Add</button></div>
+            <div id="projectFields" class="repeat-list"></div>
+          </section>
+        </form>
+      </aside>
+
+      <section class="preview-area">
+        <div class="preview-toolbar">
+          <div>
+            <span class="eyebrow">LIVE PREVIEW</span>
+            <strong>One-page professional resume</strong>
+          </div>
+          <span class="saved-status" id="savedStatus">Auto-saved</span>
+        </div>
+
+        <div class="paper-wrap">
+          <article class="resume-paper" id="resumePaper">
+            <header class="resume-header">
+              <div class="identity">
+                <div class="resume-photo" id="resumePhoto"></div>
+                <div>
+                  <h1 id="previewName">Your Name</h1>
+                  <h2 id="previewTitle">Professional Title</h2>
+                  <div class="contact-line" id="previewContact">email@example.com · +91 00000 00000 · City, Country</div>
+                </div>
+              </div>
+              <div class="links-line" id="previewLinks"></div>
+            </header>
+
+            <div class="resume-body">
+              <main>
+                <section class="resume-section" id="summarySection">
+                  <h3>Profile</h3>
+                  <p id="previewSummary">A concise professional summary will appear here. Highlight your strengths, experience and the value you bring.</p>
+                </section>
+
+                <section class="resume-section" id="experienceSection">
+                  <h3>Experience</h3>
+                  <div id="previewExperience"></div>
+                </section>
+
+                <section class="resume-section" id="projectsSection">
+                  <h3>Projects</h3>
+                  <div id="previewProjects"></div>
+                </section>
+              </main>
+
+              <aside>
+                <section class="resume-section" id="educationSection">
+                  <h3>Education</h3>
+                  <div id="previewEducation"></div>
+                </section>
+                <section class="resume-section" id="skillsSection">
+                  <h3>Skills</h3>
+                  <div class="skill-tags" id="previewSkills"></div>
+                </section>
+              </aside>
+            </div>
+
+            <footer class="resume-footer">
+              <span>ResumeForge</span>
+              <span id="footerName">Your Name</span>
+            </footer>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="educationTemplate">
+    <div class="repeat-card">
+      <button class="remove-btn" type="button" aria-label="Remove">×</button>
+      <div class="grid two">
+        <label>Degree<input data-field="degree" placeholder="BCA / MCA / B.Tech"></label>
+        <label>Institution<input data-field="school" placeholder="University / College"></label>
+      </div>
+      <div class="grid two">
+        <label>Year<input data-field="year" placeholder="2024 – 2027"></label>
+        <label>Grade<input data-field="grade" placeholder="8.5 CGPA"></label>
+      </div>
+    </div>
+  </template>
+
+  <template id="experienceTemplate">
+    <div class="repeat-card">
+      <button class="remove-btn" type="button" aria-label="Remove">×</button>
+      <div class="grid two">
+        <label>Role<input data-field="role" placeholder="Software Developer Intern"></label>
+        <label>Company<input data-field="company" placeholder="Company name"></label>
+      </div>
+      <div class="grid two">
+        <label>Period<input data-field="period" placeholder="Jun 2025 – Aug 2025"></label>
+        <label>Location<input data-field="location" placeholder="Remote / Delhi"></label>
+      </div>
+      <label>Achievements / responsibilities<textarea data-field="description" rows="3" placeholder="Built..., improved..., collaborated..."></textarea></label>
+    </div>
+  </template>
+
+  <template id="projectTemplate">
+    <div class="repeat-card">
+      <button class="remove-btn" type="button" aria-label="Remove">×</button>
+      <div class="grid two">
+        <label>Project name<input data-field="name" placeholder="Project name"></label>
+        <label>Tech stack<input data-field="stack" placeholder="HTML, CSS, JavaScript"></label>
+      </div>
+      <label>Description<textarea data-field="description" rows="3" placeholder="What did you build and what problem did it solve?"></textarea></label>
+      <label>Project link<input data-field="link" placeholder="github.com/..."></label>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
